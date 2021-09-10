@@ -8,6 +8,7 @@ const Product = require('../Schema/product');
 router.get('/', (req, res, next)=>{
     Order.find()
         .select("product quantity _id")
+        .populate('product', 'name')//name of ref property and selecting required fields , incase of relation, otherwise not used
         .exec()
         .then(docs => {
             const response = {
@@ -82,6 +83,7 @@ router.post('/', (req, res, next)=>{
 router.get('/:orderId', (req, res, next)=>{
     Order.findById(req.params.orderId)
          .select('-__v')//-ve sign to remove this __v field
+         .populate('product')//name of ref property and selecting all fields , incase of relation, otherwise not used
          .exec()
          .then(order =>{
             if (!order){
