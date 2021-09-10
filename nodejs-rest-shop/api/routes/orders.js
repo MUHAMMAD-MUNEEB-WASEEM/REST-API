@@ -46,7 +46,7 @@ router.post('/', (req, res, next)=>{
                         message: "Product not found"
                     })
                 }
-                
+
                 const order = new Order({
                     _id: mongoose.Types.ObjectId(),
                     quantity: req.body.quantity,
@@ -80,19 +80,49 @@ router.post('/', (req, res, next)=>{
 
 //for particular order in orders
 router.get('/:orderId', (req, res, next)=>{
-    res.status(200).json({
-            message: 'Order details',
-            orderId: req.params.orderId
-        })
+    Order.findById(req.params.orderId)
+         .select('-__v')//-ve sign to remove this __v field
+         .exec()
+         .then(order =>{
+            if (!order){
+                res.status(404).json({
+                    message: "Order not found"
+                })
+            }
+             res.status(200).json({
+                 order: order,
+                 request: {
+                     type: 'GET',
+                     url: 'http://localhost:3000/orders'
+                 }
+             })
+         })
+         .catch(err => {
+             res.status(500).json({
+                 error:err
+             })
+         })
 })
 
 
 router.delete('/:orderId', (req, res, next)=>{
-    res.status(200).json({
-        message: 'Order deleted',
-        orderId: req.params.orderIds
+    Order.remove({_id: req.params.orderId})
+        .exec()
+        .then(order => {
+            res.status(200).json({
+                message: "Order Deleted",
+                request: {
+                    type: 'POST',
+                    url: 'http://localhost:3000/orders',
+                    body: { productId : 'ID', quantity: "Number"},
+                }
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error:err
+         });
     })
-})
-
+});
 
 module.exports = router;
