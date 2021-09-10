@@ -14,6 +14,8 @@ mongoose.connect('mongodb+srv://admin:Dj21mrMwyo89gAHr@cluster0.dmxhm.mongodb.ne
     useUnifiedTopology:true
 });
 
+mongoose.Promise = global.Promise
+
 
 //middleware
 
