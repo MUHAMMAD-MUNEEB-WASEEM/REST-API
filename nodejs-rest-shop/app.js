@@ -1,10 +1,18 @@
 const express = require('express')
 const morgan = require('morgan')
+const mongoose = require('mongoose')
 
 const app = express();
 
 const productRoutes = require('./api/routes/products')
 const orderRoutes = require('./api/routes/orders')
+
+//mongodb connection
+mongoose.connect('mongodb+srv://admin:Dj21mrMwyo89gAHr@cluster0.dmxhm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+{
+    useNewUrlParser:true,
+    useUnifiedTopology:true
+});
 
 
 //middleware
