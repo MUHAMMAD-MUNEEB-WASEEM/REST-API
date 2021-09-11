@@ -51,7 +51,7 @@ const Product = require('../Schema/product');
 
 router.get('/', (req, res, next)=>{
     Product.find()
-            .select('name price _id') // to get only these fields
+            // .select('name price productImage _id') // to get only these fields
            .exec()
            .then(docs =>{
                const response = {
@@ -60,6 +60,7 @@ router.get('/', (req, res, next)=>{
                        return {
                            name : doc.name,
                            price : doc.price,
+                           productImage: doc.productImage,
                            _id : doc._id,
                            request: {
                                type: 'GET', 
@@ -96,7 +97,8 @@ router.post('/', upload.single('productImage'), (req, res, next)=>{
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        productImage: req.file.path
     });
 
     product.save()
@@ -108,6 +110,7 @@ router.post('/', upload.single('productImage'), (req, res, next)=>{
                         name: result.name,
                         price: result.price,
                         _id: result._id, 
+                        productImage: result.productImage,
                         request: {
                             type: 'POST',
                             url: 'http://localhost:3000/products/' + result._id
@@ -130,7 +133,7 @@ router.get('/:productId', (req, res, next)=>{
     const id = req.params.productId;
 
     Product.findById(id)
-           .select( 'name price _id')
+           .select( 'name price _id productImage')
            .exec() 
            .then(doc=>{
                console.log("From dataabase" + doc)

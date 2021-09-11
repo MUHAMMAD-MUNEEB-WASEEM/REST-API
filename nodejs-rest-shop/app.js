@@ -22,6 +22,9 @@ mongoose.Promise = global.Promise
 //morgan shows log in terminal or console
 app.use(morgan('dev'))
 
+//image middleware
+app.use('/uploads/', express.static('uploads'))
+
 //body parser which is now replaced by express is used to parse body of your choice
 app.use(express.urlencoded({extended: false}))//parse simple bodies of url encoded data
 app.use(express.json());//this is to extract json data and make it readable
