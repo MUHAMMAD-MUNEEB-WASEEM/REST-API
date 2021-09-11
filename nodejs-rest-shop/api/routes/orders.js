@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 
 const Order = require('../Schema/order');
 const Product = require('../Schema/product');
+const checkAuth  = require('../auth/check-auth')
 
-router.get('/', (req, res, next)=>{
+router.get('/', checkAuth, (req, res, next)=>{
     Order.find()
         .select("product quantity _id")
         .populate('product', 'name')//name of ref property and selecting required fields , incase of relation, otherwise not used
@@ -34,7 +35,7 @@ router.get('/', (req, res, next)=>{
         })
 })
 
-router.post('/', (req, res, next)=>{
+router.post('/', checkAuth, (req, res, next)=>{
     // const order = {
     //     productId: req.body.productId,
     //     quantity: req.body.quantity
@@ -80,7 +81,7 @@ router.post('/', (req, res, next)=>{
 })
 
 //for particular order in orders
-router.get('/:orderId', (req, res, next)=>{
+router.get('/:orderId', checkAuth, (req, res, next)=>{
     Order.findById(req.params.orderId)
          .select('-__v')//-ve sign to remove this __v field
          .populate('product')//name of ref property and selecting all fields , incase of relation, otherwise not used
@@ -107,7 +108,7 @@ router.get('/:orderId', (req, res, next)=>{
 })
 
 
-router.delete('/:orderId', (req, res, next)=>{
+router.delete('/:orderId', checkAuth, (req, res, next)=>{
     Order.remove({_id: req.params.orderId})
         .exec()
         .then(order => {

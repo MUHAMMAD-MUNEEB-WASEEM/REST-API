@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router(); //to create routes
 const mongoose = require('mongoose')
 const multer = require('multer')
+const checkAuth = require('../auth/check-auth')
 
 //Below work is to enhance image experience with good filename and readable, limits, filters
 
@@ -86,7 +87,7 @@ router.get('/', (req, res, next)=>{
 
 })
 //updating with upload.single for image or file
-router.post('/', upload.single('productImage'), (req, res, next)=>{
+router.post('/', checkAuth, upload.single('productImage'), (req, res, next)=>{
     // const product = {
     //     name: req.body.name,
     //     price: req.body.price
@@ -125,7 +126,6 @@ router.post('/', upload.single('productImage'), (req, res, next)=>{
                 })
             });
 
-
 })
 
 //for particular product in products
@@ -159,7 +159,7 @@ router.get('/:productId', (req, res, next)=>{
             })
 })
 
-router.patch('/:productId', (req, res, next)=>{
+router.patch('/:productId', checkAuth, (req, res, next)=>{
     const id = req.params.productId;
     
     const updateOps = {};
@@ -186,7 +186,7 @@ router.patch('/:productId', (req, res, next)=>{
             })
 })
 
-router.delete('/:productId', (req, res, next)=>{
+router.delete('/:productId', checkAuth, (req, res, next)=>{
     const id = req.params.productId
     Product.remove({_id: id})
             .exec()
